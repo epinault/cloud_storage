@@ -63,7 +63,9 @@ defmodule CloudStorage.LocalFile do
 
   def delete(key) do
     full_path = Path.join([root_path(), key])
+    header_full_path = Path.join([root_path(), "#{key}.headers"])
 
+    File.rm(header_full_path)
     File.rm(full_path)
   end
 
