@@ -44,18 +44,16 @@ defmodule CloudStorage.LocalFile do
   def put(key, data, options \\ []) do
     full_path = Path.join([root_path(), key])
 
-    # # create dir if needed
+    # create dir if needed
     File.mkdir_p!(Path.dirname(full_path))
 
-    # #simulate saving special headers and metadata to S3
-    headers_file = File.open!("#{full_path}.headers", [:utf8, :write])
-
+    # simulate saving special headers and metadata to S3
     json_data = Jason.encode!(Keyword.to_list(options))
-    IO.write(headers_file, json_data)
+    File.write!("#{full_path}.headers", json_data)
 
     # actual writting of the data at the key
-    file = File.open!("#{full_path}", [:utf8, :write])
-    IO.write(file, data)
+    File.write!("#{full_path}", data)
+
     {:ok, %{status_code: 200, body: ""}}
   end
 
